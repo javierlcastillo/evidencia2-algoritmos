@@ -66,15 +66,15 @@ int main (){
     int n, m, k, q;
     cin >> n >> m >> k >> q;
     Graph g(n, m);
-    int x, y, central; 
+    int x, y, central, costo; 
     string nombre1, nombre2;
     for(int i = 0; i < n; i++){
         cin >> nombre1 >> x >> y >> central;
         g.addColoniaInMap(nombre1, x, y, central);
     }
     for(int i = 0; i < m; i++){
-
-        g.addEdge()
+        cin >> nombre1 >> nombre2 >> costo;
+        g.addEdge(nombre1, nombre2, costo);
     }
 
     return 0;

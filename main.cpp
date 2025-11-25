@@ -174,6 +174,41 @@ struct Graph {
             }
         }
     } 
+
+     // ============================================
+    // ALGORITMO 4: DISTANCIA EUCLIDIANA
+    // ============================================
+    /* Explicación:
+     * - Para cada nueva colonia, encuentra la colonia existente más cercana
+     * - Usa la fórmula de distancia euclidiana: sqrt((x2-x1)² + (y2-y1)²)
+     * - Complejidad: O(n) por cada nueva colonia
+     */
+    void coloniaMasCercana(string nombreNueva, int x_nueva, int y_nueva){
+        double distanciaMinima = INF;
+        string coloniaCercana = "";
+        int x_cercana = 0, y_cercana = 0;
+        
+        // Revisar cada colonia existente
+        for (auto& col : colonias){
+            // Calcular distancia euclidiana
+            double distancia = sqrt(pow(col.second.x - x_nueva, 2) + 
+                                   pow(col.second.y - y_nueva, 2));
+            
+            // Si es la más cercana hasta ahora, guardarla
+            if (distancia < distanciaMinima){
+                distanciaMinima = distancia;
+                coloniaCercana = col.second.nombre;
+                x_cercana = col.second.x;
+                y_cercana = col.second.y;
+            }
+        }
+        
+        // Imprimir resultado
+        cout << nombreNueva << " debe conectarse con " << coloniaCercana << endl;
+        cout << "  Coordenadas: (" << x_nueva << ", " << y_nueva 
+             << ") -> (" << x_cercana << ", " << y_cercana << ")" << endl;
+    }
+
 };
 
 int main (){

@@ -1,5 +1,5 @@
 // Actividad intregradora 2
-// Autores: Javier Luis Castillo Solórzano y Diego García González
+// Autores: Javier Luis Castillo Solórzano y su hijo, Diego García González
 // Matrículas: A01658415 A01198976
 
 #include <iostream>
@@ -185,9 +185,10 @@ struct Graph {
             for (int i = 0; i < n; i++){       // i = origen
                 for (int j = 0; j < n; j++){   // j = destino
                     if (distMatrix[i][k] != INF && distMatrix[k][j] != INF){
-                        // ¿Es mejor ir i->k->j que i->j directo?
-                        distMatrix[i][j] = min(distMatrix[i][j], distMatrix[i][k] + distMatrix[k][j]);
-                        succesorMatrix[i][j] = succesorMatrix[i][k];
+                        if (distMatrix[i][k] + distMatrix[k][j] < distMatrix[i][j]) {
+                            distMatrix[i][j] = distMatrix[i][k] + distMatrix[k][j];
+                            succesorMatrix[i][j] = succesorMatrix[i][k];
+                        }
 
                     }
                 }
@@ -210,35 +211,25 @@ struct Graph {
     }
 
     void displayPath(int origen, int destino){
-        /*
-        La idea es utilizar successorMatrix para poder desplegar el path
-        */
-       int actual = origen;
-       if (distMatrix[origen][destino] == INF){
-            cout << "No hay ruta";
+        if (distMatrix[origen][destino] == INF){
+            cout << "No hay ruta de " << stringColonias[origen] << " a " << stringColonias[destino] << endl;
             return;
        } 
-       cout << actual << " -> "; 
-        while(actual != origen){
-            cout << actual;
+       int actual = origen;
+       cout << stringColonias[actual];
+        while(actual != destino){
             actual = succesorMatrix[actual][destino];
-            if (actual != origen){
-                cout << " -> "; 
-            }
+            cout << " -> " << stringColonias[actual];
         }
     }
 
-    void shortestPath(){
+    pair<int, vector<int>> shortestPath(int inicio){
         int iteraciones = 0;
         int costo_total = 0;
         // se definen que tipo de colonia se va a utilizar
         const vector<int> &visitarColonias = arregloNoCentrales;
-        cout << "--------------------------------------------------------" << endl;
-        cout << " 2  Ruta más corta para visitar cada colonia NO central" << endl;
-        cout << "--------------------------------------------------------" << endl;
         vector<int> ruta;
         unordered_map<int, bool> visitadas;
-        int inicio = 0;
         int actual = inicio; 
         ruta.push_back(actual);
         visitadas[actual] = true; 
@@ -248,13 +239,12 @@ struct Graph {
             for(int it_colonia : visitarColonias){
                 // Ya visitamos esta colonia?
                 if(visitadas.find(it_colonia) == visitadas.end()){
+                    // Es menor el costo de la nueva a el minimo que tenemos
                     if(distMatrix[actual][it_colonia] < distMinima){
                         distMinima = distMatrix[actual][it_colonia]; 
                         coloniaCercana = it_colonia; 
                     }
                 }
-                iteraciones++;
-                cout << iteraciones << endl;
             }
             if (coloniaCercana != -1){
                 costo_total += distMinima;
@@ -265,10 +255,42 @@ struct Graph {
         }
         costo_total += distMatrix[actual][inicio];
         actual = inicio;
-        while (actual + 1 < ruta.size()){
-            displayPath(actual, actual + 1); 
+        return {costo_total, ruta};
+    }
+
+    void tsp(){
+        // int min_cost = INF;
+        int punto_inicial;
+        vector<int> ruta;
+        int cost;
+        // for(int i = 0; i < n; i++){
+        //     pair<int, vector<int>> result = shortestPath(i);
+        //     cost = result.first;
+        //     if (cost < min_cost){
+        //         min_cost = cost;
+        //         ruta = result.second;
+        //     }
+        // }
+
+        pair<int,vector<int>> result = shortestPath(0);
+        cost = result.first;
+        ruta = result.second;
+        int actual = ruta[0]; 
+        cout << "--------------------------------------------------------" << endl;
+        cout << " 2  Ruta más corta para visitar cada colonia NO central" << endl;
+        cout << "--------------------------------------------------------" << endl << endl;
+        auto it = stringColonias.find(ruta[0]);
+        string staring_point = it->second;
+        cout << "Tendrá un costo de: " << cost << endl;
+        cout << "El mejor punto de inico es en: " << staring_point << endl;
+        cout << "Mejor ruta: " << endl;  
+        for (int i = 0; i < ruta.size() - 1; ++i) {
+            displayPath(ruta[i], ruta[i+1]);
+            cout << endl;
         }
-        
+        // Y el camino de vuelta al inicio
+        displayPath(ruta.back(), ruta[0]);
+        cout << endl;
     }
 
      // ============================================
@@ -342,14 +364,24 @@ int main (){
      * Se utiliza Kruskal
      */
     g.kruskal(cableadoNuevo);
-    /* --- PROBLEMA 1 --- 
+    /* --- PROBLEMA 2 --- 
      * Se busca encontrar una forma eficiente de visitar todas las colonias que NO SON CENTRALES
      * El algoritmo requiere de la incializacion de FloydWarshall para conocer los costos minimos y
      * conocer cuales son las rutas para estos caminos minimos.
      * Se llama definir centrales ya que es el que envia el arreglo con las centrales a recorrer
+     * Se llama Floyd-Warshall para conocer los costos minimos y se utiliza successor Matrix para 
+     * conocer las rutas.
      */
     g.floydWarshall();
     g.definirCentrales();
-    g.shortestPath();
+    g.tsp();
+    /* --- PROBLEMA 3 --- 
+     * Se busca encontrar una forma eficiente de visitar todas las colonias que NO SON CENTRALES
+     * El algoritmo requiere de la incializacion de FloydWarshall para conocer los costos minimos y
+     * conocer cuales son las rutas para estos caminos minimos.
+     * Se llama definir centrales ya que es el que envia el arreglo con las centrales a recorrer
+     * Se llama Floyd-Warshall para conocer los costos minimos y se utiliza successor Matrix para 
+     * conocer las rutas.
+     */
     return 0;
 }

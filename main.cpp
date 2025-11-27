@@ -327,6 +327,19 @@ struct Graph {
              << ") -> (" << x_cercana << ", " << y_cercana << ")" << endl;
     }
 
+    void rutasEntreCentrales(){
+        unordered_map<int, bool> visitadas;
+        for (int i = 0; i < arregloCentrales.size(); i++){
+            auto it = stringColonias.find(i);
+            cout << "Mostrando rutas desde " << it->first << ":" << endl;  
+            for(int j = 0; j < arregloCentrales.size(); j++){
+                if (visitadas.find(j) != visitadas.end()){
+                    displayPath(i, j);
+                }
+            }
+            visitadas[i] = true; 
+        }
+    }
     
 
 };
@@ -369,19 +382,17 @@ int main (){
      * El algoritmo requiere de la incializacion de FloydWarshall para conocer los costos minimos y
      * conocer cuales son las rutas para estos caminos minimos.
      * Se llama definir centrales ya que es el que envia el arreglo con las centrales a recorrer
-     * Se llama Floyd-Warshall para conocer los costos minimos y se utiliza successor Matrix para 
-     * conocer las rutas.
      */
     g.floydWarshall();
     g.definirCentrales();
     g.tsp();
     /* --- PROBLEMA 3 --- 
-     * Se busca encontrar una forma eficiente de visitar todas las colonias que NO SON CENTRALES
+     * Se busca conocer cual es la ruta optima para ir de una central a otra central
      * El algoritmo requiere de la incializacion de FloydWarshall para conocer los costos minimos y
      * conocer cuales son las rutas para estos caminos minimos.
      * Se llama definir centrales ya que es el que envia el arreglo con las centrales a recorrer
-     * Se llama Floyd-Warshall para conocer los costos minimos y se utiliza successor Matrix para 
-     * conocer las rutas.
+     * A diferencia del TSP, unicamente se busca imprimir las rutas de todas las centrales entre si.
      */
+    
     return 0;
 }

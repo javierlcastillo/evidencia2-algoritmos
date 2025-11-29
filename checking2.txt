@@ -1,0 +1,57 @@
+Autores: Javier Luis Castillo Solorzano y Diego García González
+Matrículas: A01658415 A01198976
+----------------------------------------------------------------
+-------------------
+1 – Cableado óptimo de nueva conexión.
+
+Pantitl??n - Ju??rez 4
+RomaNorte - Cosmopolita 25
+Pantitl??n - Cosmopolita 25
+Condesa - Polanco 27
+Condesa - Cosmopolita 34
+Polanco - Merced 54
+Polanco - Tlatelolco 58
+SantaFe - Merced 66
+DelValle - Pantitl??n 68
+
+Costo Total: 361
+
+--------------------------------------------------------
+          2   La ruta óptima.
+--------------------------------------------------------
+
+Condesa - Pantitl??n - DelValle - Merced - Condesa
+
+La Ruta Óptima tiene un costo total de: 368
+
+--------------------------------------------------------
+          3   Caminos más cortos entre centrales
+--------------------------------------------------------
+
+Cosmopolita -> Pantitl??n -> SantaFe (92)
+Cosmopolita -> Ju??rez (29)
+Cosmopolita -> RomaNorte (25)
+Cosmopolita -> Condesa -> Polanco (61)
+Cosmopolita -> Condesa (34)
+SantaFe -> Pantitl??n -> Ju??rez (71)
+SantaFe -> Pantitl??n -> Cosmopolita -> RomaNorte (117)
+SantaFe -> Merced -> Polanco (120)
+SantaFe -> Pantitl??n -> Cosmopolita -> Condesa (126)
+Ju??rez -> Cosmopolita -> RomaNorte (54)
+Ju??rez -> Cosmopolita -> Condesa -> Polanco (90)
+Ju??rez -> Cosmopolita -> Condesa (63)
+RomaNorte -> Cosmopolita -> Condesa -> Polanco (86)
+RomaNorte -> Cosmopolita -> Condesa (59)
+Polanco -> Condesa (27)
+--------------------------------------------------------
+          4   Conexión de nuevas colonias
+--------------------------------------------------------
+
+FelipeAngeles debe conectarse con Pantitl??n
+  Coordenadas: (-64, 25) -> (-108, 42)
+Tlazintla debe conectarse con RomaNorte
+  Coordenadas: (-85, -106) -> (-91, -160)
+Penitenciaria debe conectarse con DelValle
+  Coordenadas: (-99, -83) -> (-142, -70)
+Porvenir debe conectarse con RomaNorte
+  Coordenadas: (-95, -196) -> (-91, -160)

@@ -3,6 +3,7 @@
 // Matrículas: A01658415 A01198976
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
@@ -120,9 +121,8 @@ struct Graph {
     
     // 1. KRUSKAL 
     void kruskal(vector<pair<string, string>>& cableadoNuevo){
-        cout << "--------------------------------------------------------" << endl;
-        cout << "       1   Cableado óptimo de nueva fibra óptica" << endl;
-        cout << "--------------------------------------------------------" << endl;
+        cout << "-------------------" << endl;
+        cout << "1 – Cableado óptimo de nueva conexión." << endl << endl;
 
         // Marcar aristas nuevas
         set<pair<int, int>> nuevas;
@@ -155,7 +155,7 @@ struct Graph {
                     if (col.second.id == v) nombre_v = col.second.nombre;
                 }
                 
-                cout << nombre_u << " - " << nombre_v << endl;
+                cout << nombre_u << " - " << nombre_v << " " << costo << endl;
                 
                 // Solo sumar si no es nueva
                 pair<int, int> arista = {min(u, v), max(u, v)};
@@ -165,7 +165,7 @@ struct Graph {
             }
         }
         
-        cout << "   -Costo total del cableado: " << costoTotal << endl << endl;
+        cout << endl << "Costo Total: " << costoTotal << endl << endl;
     }
     
 // ============================================
@@ -263,34 +263,27 @@ struct Graph {
         int punto_inicial;
         vector<int> ruta;
         int cost;
-        // for(int i = 0; i < n; i++){
-        //     pair<int, vector<int>> result = shortestPath(i);
-        //     cost = result.first;
-        //     if (cost < min_cost){
-        //         min_cost = cost;
-        //         ruta = result.second;
-        //     }
-        // }
 
         pair<int,vector<int>> result = shortestPath(0);
         cost = result.first;
         ruta = result.second;
-        int actual = ruta[0]; 
+        
         cout << "--------------------------------------------------------" << endl;
-        cout << " 2  Ruta más corta para visitar cada colonia NO central" << endl;
+        cout << "          2   La ruta óptima." << endl;
         cout << "--------------------------------------------------------" << endl << endl;
-        auto it = stringColonias.find(ruta[0]);
-        string staring_point = it->second;
-        cout << "Tendrá un costo de: " << cost << endl;
-        cout << "El mejor punto de inico es en: " << staring_point << endl;
-        cout << "Mejor ruta: " << endl;  
-        for (int i = 0; i < ruta.size() - 1; ++i) {
-            displayPath(ruta[i], ruta[i+1]);
-            cout << endl;
+
+        string full_path = "";
+        for (int i = 0; i < ruta.size(); ++i) {
+            full_path += stringColonias[ruta[i]];
+            if (i < ruta.size() - 1) {
+                full_path += " - ";
+            }
         }
-        // Y el camino de vuelta al inicio
-        displayPath(ruta.back(), ruta[0]);
-        cout << endl;
+        // Add the return to origin
+        full_path += " - " + stringColonias[ruta[0]];
+
+        cout << full_path << endl << endl;
+        cout << "La Ruta Óptima tiene un costo total de: " << cost << endl << endl;
     }
 
      // ============================================
@@ -328,16 +321,14 @@ struct Graph {
     }
 
     void rutasEntreCentrales(){
-        unordered_map<int, bool> visitadas;
-        for (int i = 0; i < arregloCentrales.size(); i++){
-            auto it = stringColonias.find(i);
-            cout << "Mostrando rutas desde " << it->first << ":" << endl;  
-            for(int j = 0; j < arregloCentrales.size(); j++){
-                if (visitadas.find(j) != visitadas.end()){
-                    displayPath(i, j);
-                }
+        for (int i = 0; i < arregloCentrales.size(); ++i){
+            for (int j = i + 1; j < arregloCentrales.size(); ++j){
+                int u = arregloCentrales[i];
+                int v = arregloCentrales[j];
+                
+                displayPath(u, v);
+                cout << " (" << distMatrix[u][v] << ")" << endl;
             }
-            visitadas[i] = true; 
         }
     }
     
@@ -345,7 +336,16 @@ struct Graph {
 };
 
 int main (){
-    // Lectura de valores
+    ofstream outfile("checking2.txt");
+    // GUARDAMOS el output buffer de cout en una variable
+    auto* cout_buffer = cout.rdbuf();
+    // Redirigimos el output al archivo.
+    cout.rdbuf(outfile.rdbuf());
+
+
+    cout << "Autores: Javier Luis Castillo Solorzano y Diego García González" << endl;
+    cout << "Matrículas: A01658415 A01198976" << endl;
+    cout << "----------------------------------------------------------------" << endl;
     int n, m, k, q;
     cin >> n >> m >> k >> q;
     Graph g(n, m);
@@ -393,6 +393,26 @@ int main (){
      * Se llama definir centrales ya que es el que envia el arreglo con las centrales a recorrer
      * A diferencia del TSP, unicamente se busca imprimir las rutas de todas las centrales entre si.
      */
+    cout << "--------------------------------------------------------" << endl;
+    cout << "          3   Caminos más cortos entre centrales" << endl;
+    cout << "--------------------------------------------------------" << endl << endl;
+    g.rutasEntreCentrales();
     
+    /* --- PROBLEMA 4 ---
+     * Se lee una serie de puntos cartecianos en el mapa de la ciudad
+     * en donde se planea conectar nuevas colonias, y se deberá decir cual es la
+     * colina y punto carteciano más cercano con el cual se debe conectar.
+     */
+    cout << "--------------------------------------------------------" << endl;
+    cout << "          4   Conexión de nuevas colonias" << endl;
+    cout << "--------------------------------------------------------" << endl << endl;
+
+    for(int i = 0; i < q; i++){
+        cin >> nombre1 >> x >> y;
+        g.coloniaMasCercana(nombre1, x, y);
+    }
+    
+    // Restauramos el cout buffer
+    cout.rdbuf(cout_buffer); 
     return 0;
 }
